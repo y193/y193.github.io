@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pornhub</title>
+</head>
+<body>
+	<textarea id="source"></textarea>
+	<div id="result"></div>
+	<script>
+		const regex1 = /var\s+quality_\d+p\s*=\s*(?:[^\/;]+|\/\*(?:[^*]|\*(?!\/))*\*\/)+\s*(?=;)/g;
+		const regex2 = /var\s+quality_\d+p\s*=\s*/;
+		const regex3 = /\/\*(?:[^*]|\*(?!\/))*\*\//g;
+		const regex4 = /\s*\+\s*/g;
+		const regex5 = /"\s*\+\s*"/g;
+		const source = document.getElementById('source');
+		const result = document.getElementById('result');
+
+		source.addEventListener('input', update);
+
+		function update(e) {
+			const str = e.target.value;
+			const matches = str.matchAll(regex1);
+			let URLs = '';
+
+			for (const match of matches) {
+				let URL = '';
+				let vars = match[0].replace(regex2, '').replace(regex3, '').split(regex4);
+
+				for (let i = 0; i < vars.length; i++) {
+					URL += str.match(new RegExp('var\\s*' + vars[i] + '\\s*=([^;]+);'))[1]
+						.slice(1, -1)
+						.replace(regex5, '');
+				}
+
+				URLs += '<p><a href="' + URL + '">' + URL + '<' + '/a></p>';
+			}
+
+			source.value = '';
+			result.innerHTML = URLs;
+		}
+
+	</script>
+</body>
+</html>
