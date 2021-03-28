@@ -7,8 +7,8 @@
 	<textarea id="source"></textarea>
 	<div id="result"></div>
 	<script>
-		const regex1 = /var\s+media_0\s*=\s*(?:[^\/;]+|\/\*(?:[^*]|\*(?!\/))*\*\/)+\s*(?=;)/g;
-		const regex2 = /var\s+media_0\s*=\s*/;
+		const regex1 = /var\s+media_\d+\s*=\s*(?:[^\/;]+|\/\*(?:[^*]|\*(?!\/))*\*\/)+\s*(?=;)/g;
+		const regex2 = /var\s+media_\d+\s*=\s*/;
 		const regex3 = /\/\*(?:[^*]|\*(?!\/))*\*\//g;
 		const regex4 = /\s*\+\s*/g;
 		const regex5 = /"\s*\+\s*"/g;
@@ -23,8 +23,8 @@
 			let URLs = '';
 
 			for (const match of matches) {
+				const vars = match[0].replace(regex2, '').replace(regex3, '').split(regex4);
 				let URL = '';
-				let vars = match[0].replace(regex2, '').replace(regex3, '').split(regex4);
 
 				for (let i = 0; i < vars.length; i++) {
 					URL += str.match(new RegExp('var\\s*' + vars[i] + '\\s*=([^;]+);'))[1]
@@ -32,7 +32,12 @@
 						.replace(regex5, '');
 				}
 
-				URLs += '<p><a href="' + URL + '">' + URL + '<' + '/a></p>';
+				if (URL.includes("master.m3u8") && !URL.includes(".mp4.urlset")) {
+					URLs += '<p><a href="' + URL + '">' + URL + '<' + '/a></p>';
+
+					URL = URL.replace('master.m3u8', 'index-f1-v1-a1.m3u8');
+					URLs += '<p><a href="' + URL + '">' + URL + '<' + '/a></p>';
+				}
 			}
 
 			source.value = '';
