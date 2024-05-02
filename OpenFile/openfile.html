@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sample page</title>
+</head>
+
+<body>
+    <script src="openfile.js"></script>
+    <script>
+        function openFileOnCancel() {
+            console.log("Open File Cancelled.");
+        }
+
+        function openFileOnAbort(event) {
+            console.log("Open File Aborted.");
+        }
+
+        function openFileOnError(event) {
+            console.log("Open File Failed.");
+        }
+
+        function openFileOnLoad(file, fileData) {
+            console.log("name:" + file.name);
+            console.log("type:" + file.type);
+            console.log("size:" + file.size);
+            console.log("fileData:" + fileData);
+        }
+    </script>
+    <button
+        onclick="openFile('readAsDataURL', openFileOnCancel, openFileOnAbort, openFileOnError, openFileOnLoad);">Open
+        File... readAsDataURL</button>
+    <button
+        onclick="openFile('readAsBinaryString', openFileOnCancel, openFileOnAbort, openFileOnError, openFileOnLoad);">Open
+        File... readAsBinaryString</button>
+</body>
+
+</html>
